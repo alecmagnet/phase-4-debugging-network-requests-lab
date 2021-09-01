@@ -63,11 +63,33 @@ developing your own process.
 - Add a new toy when the toy form is submitted
 
   - How I debugged:
+      - First, I sent a request from the front-end. 
+        - In the console, I got: 
+          POST http://localhost:4000/toys 500 (Internal Server Error)  
+          ToyForm.js:24"
+        - In Network, in the Rails server log, I got: 
+          {status: 500, error: "Internal Server Error",…}
+          error: "Internal Server Error"
+          exception: "#<NameError: uninitialized constant ToysController::Toys>"
+          - That means there is a typo. "Toys" should be "Toy". I fixed it, and my next POST worked. 
+
 
 - Update the number of likes for a toy
 
   - How I debugged:
+    - First, I tried adding a like on the frontend. I got: 
+      VM1018:1 Uncaught (in promise) SyntaxError: Unexpected end of JSON input
+      - Since I know the fetch request is written correctly, that error suggests that my Controller action is not returning a response with "render json:"
+        -So I added "render json: toy, status: :accepted", and now it works. 
 
 - Donate a toy to Goodwill (and delete it from our database)
 
   - How I debugged:
+      - First, I sent a request from the front-end. 
+        - In the console, I got: 
+          DELETE http://localhost:4000/toys/9 404 (Not Found)  
+          ToyCard.js:7"
+        - In Network, in the Rails server log, I got: 
+          exception: "#<ActionController::RoutingError: No route matches [DELETE] \"/toys/9\">"
+          - So I added ":destroy" to the resources in Routes.rb, and that fixed it
+
